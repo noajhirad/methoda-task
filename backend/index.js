@@ -6,7 +6,6 @@ import {
   getRows,
   deleteItem,
   deleteAll,
-  isEmptyStatusList,
   handleDeleteStatus,
 } from "./dbLogic.js";
 
@@ -38,24 +37,11 @@ app.get("/transition-list", (req, res) => {
 app.post("/add-status", (req, res) => {
   const { name } = req.body;
 
-  isEmptyStatusList((err, rows) => {
+  createStatus(name, isInit, (err) => {
     if (err) {
       res.status(500).send(err.message);
     } else {
-      let isInit = rows.length > 0 ? 0 : 1;
-
-      if (rows.length > 0) {
-        isInit = 0;
-      } else {
-        isInit = 1;
-      }
-      createStatus(name, isInit, (err) => {
-        if (err) {
-          res.status(500).send(err.message);
-        } else {
-          res.status(200).send(`Status ${name} is added.`);
-        }
-      });
+      res.status(200).send(`Status ${name} is added.`);
     }
   });
 });

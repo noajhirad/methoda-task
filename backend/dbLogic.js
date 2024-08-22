@@ -1,13 +1,8 @@
 import db from "./database.js";
 
 const createStatus = (name, isInit, callback) => {
-  const sql = `INSERT INTO statuses (name, isInit, isOrphan, isFinal) VALUES (?, ?, ?, ?)`;
-  db.run(sql, [name, isInit, !isInit, 1], callback);
-};
-
-const isEmptyStatusList = (callback) => {
-  const sql = "SELECT * FROM statuses";
-  db.all(sql, [], callback);
+  const sql = `INSERT INTO statuses (name) VALUES (?)`;
+  db.run(sql, [name], callback);
 };
 
 const createTransition = (name, from, to, callback) => {
@@ -27,27 +22,8 @@ const deleteItem = (table, name, callback) => {
 
 // deletes all the transitions related to the deleted status, and chooses a new init status.
 const handleDeleteStatus = (status, callback) => {
-  const sql1 = `DELETE FROM transitions WHERE fromStatus=? OR toStatus=?`;
-  const sql2 = `UPDATE statuses SET isInit=1 WHERE name= (
-    SELECT
-    CASE 
-        WHEN EXISTS (SELECT 1 FROM transitions) THEN (
-            SELECT fromStatus
-            FROM transitions
-            LIMIT 1
-        )
-        ELSE (
-            SELECT name
-            FROM statuses
-            LIMIT 1
-        )
-    END);`;
-  db.run(sql1, status, (err) => {
-    if (err) {
-      return callback(err);
-    }
-    db.run(sql2, [], callback);
-  });
+  const sql = `DELETE FROM transitions WHERE fromStatus=? OR toStatus=?`;
+  db.run(sql, status, callback);
 };
 
 const deleteAll = (callback) => {
@@ -65,6 +41,5 @@ export {
   getRows,
   deleteItem,
   deleteAll,
-  isEmptyStatusList,
   handleDeleteStatus,
 };
