@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import {
   createStatus,
   createTransition,
@@ -10,6 +11,7 @@ import {
 } from "./dbLogic.js";
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 const port = 5001;
 
