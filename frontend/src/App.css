@@ -1,6 +1,17 @@
 .App {
   padding: 30px;
+}
+
+.content {
   display: flex;
   flex-direction: row;
   gap: 50px;
+}
+
+.reset-btn {
+  margin: 50px;
+  background-color: red;
+  width: 90px;
+  height: 40px;
+  justify-self: center;
 }

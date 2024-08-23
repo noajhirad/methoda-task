@@ -7,6 +7,7 @@ import {
   deleteItem,
   deleteAll,
   handleDeleteStatus,
+  updateInitStatus,
 } from "./dbLogic.js";
 
 const app = express();
@@ -35,7 +36,7 @@ app.get("/transition-list", (req, res) => {
 });
 
 app.post("/add-status", (req, res) => {
-  const { name } = req.body;
+  const { name, isInit } = req.body;
 
   createStatus(name, isInit, (err) => {
     if (err) {
@@ -47,9 +48,9 @@ app.post("/add-status", (req, res) => {
 });
 
 app.post("/add-transition", (req, res) => {
-  const { name, from, to } = req.body;
+  const { name, fromStatus, toStatus } = req.body;
 
-  createTransition(name, from, to, (err, data) => {
+  createTransition(name, fromStatus, toStatus, (err, data) => {
     if (err) {
       res.status(500).send(err.message);
     } else {
@@ -94,6 +95,17 @@ app.delete("/delete-all", (req, res) => {
       res.status(500).send(err.message);
     } else {
       res.status(200).send("Deleted all.");
+    }
+  });
+});
+
+app.post("/new-init", (req, res) => {
+  const { name } = req.body;
+  updateInitStatus(name, (err) => {
+    if (err) {
+      res.status(500).send(err.message);
+    } else {
+      res.status(200).send(`Updated init to status ${name}`);
     }
   });
 });
