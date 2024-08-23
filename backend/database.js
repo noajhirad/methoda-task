@@ -8,7 +8,7 @@ let db = new sqlite3.Database(dbName, (err) => {
     console.log("connected to db");
     db.run(
       `CREATE TABLE IF NOT EXISTS statuses 
-        (name STRING PRIMARY KEY)`,
+        (name STRING PRIMARY KEY, isInit BOOLEAN)`,
       (err) => {
         if (err) {
           console.log(err);

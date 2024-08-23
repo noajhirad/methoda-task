@@ -1,8 +1,8 @@
 import db from "./database.js";
 
 const createStatus = (name, isInit, callback) => {
-  const sql = `INSERT INTO statuses (name) VALUES (?)`;
-  db.run(sql, [name], callback);
+  const sql = `INSERT INTO statuses (name, isInit) VALUES (?,?)`;
+  db.run(sql, [name, isInit], callback);
 };
 
 const createTransition = (name, from, to, callback) => {
@@ -23,7 +23,7 @@ const deleteItem = (table, name, callback) => {
 // deletes all the transitions related to the deleted status, and chooses a new init status.
 const handleDeleteStatus = (status, callback) => {
   const sql = `DELETE FROM transitions WHERE fromStatus=? OR toStatus=?`;
-  db.run(sql, status, callback);
+  db.run(sql, [status, status], callback);
 };
 
 const deleteAll = (callback) => {
@@ -35,6 +35,10 @@ const deleteAll = (callback) => {
   });
 };
 
+const updateInitStatus = (name, callback) => {
+  db.run(`UPDATE statuses SET isInit = ? WHERE name = ?;`, [1, name], callback);
+};
+
 export {
   createStatus,
   createTransition,
@@ -42,4 +46,5 @@ export {
   deleteItem,
   deleteAll,
   handleDeleteStatus,
+  updateInitStatus,
 };

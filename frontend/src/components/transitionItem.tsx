@@ -1,10 +1,33 @@
-import { transition } from "../types";
+import { transition, transitionItemProps } from "../types";
 
-export function TransitionItem(props: transition) {
+export function TransitionItem({
+  transition,
+  fetchTransitionList,
+}: transitionItemProps) {
+  async function removeTransition() {
+    const response = await fetch("http://localhost:5001/delete-transition", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name: transition.name }),
+    });
+    if (!response.ok) {
+      console.log("server error!");
+    }
+  }
+
   return (
     <div>
-      {`${props.name}: ${props.fromStatus} -> ${props.toStatus}`}
-      <button>remove</button>
+      {`${transition.name}: ${transition.fromStatus} -> ${transition.toStatus}`}
+      <button
+        onClick={async () => {
+          await removeTransition();
+          await fetchTransitionList();
+        }}
+      >
+        remove
+      </button>
     </div>
   );
 }
